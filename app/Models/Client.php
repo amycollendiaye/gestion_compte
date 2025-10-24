@@ -11,6 +11,7 @@ class Client extends Model
     // Use UUIDs for primary key
     public $incrementing = false;
     protected $keyType = 'string';
+    
      protected $fillable = [
         'user_id',
         'cni'

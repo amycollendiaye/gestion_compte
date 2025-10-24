@@ -1,0 +1,263 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Gestion Compte API",
+        "description": "API pour la gestion des comptes",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Serveur principal"
+        }
+    ],
+    "paths": {
+        "/api/comptes/validate": {
+            "post": {
+                "tags": [
+                    "Comptes"
+                ],
+                "summary": "Valider les données d'un compte",
+                "operationId": "2c797980a86d71b2eddb167eb6524a7a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero_compte": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "type_compte": {
+                                        "type": "string",
+                                        "example": "courant"
+                                    },
+                                    "statut": {
+                                        "type": "string",
+                                        "example": "actif"
+                                    },
+                                    "archive": {
+                                        "type": "string",
+                                        "example": "non"
+                                    },
+                                    "client_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Validation réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Données du compte valides."
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/comptes": {
+            "get": {
+                "tags": [
+                    "Comptes"
+                ],
+                "summary": "Lister tous les comptes",
+                "operationId": "4059c2a0b4cce9e57227146f5b16138d",
+                "responses": {
+                    "200": {
+                        "description": "Liste des comptes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "liste les comptes"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "a26341aa-bbf1-3107-ab48-c9455fc181a7"
+                                                    },
+                                                    "numero_compte": {
+                                                        "type": "string",
+                                                        "example": "ORANGEBANK-23994273"
+                                                    },
+                                                    "type_compte": {
+                                                        "type": "string",
+                                                        "example": "cheque"
+                                                    },
+                                                    "statut": {
+                                                        "type": "string",
+                                                        "example": "inactif"
+                                                    },
+                                                    "client_id": {
+                                                        "type": "string",
+                                                        "example": "397c23b1-973d-36d0-8f06-4750fa8b2b56"
+                                                    },
+                                                    "archive": {
+                                                        "type": "string",
+                                                        "example": "supprime"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-10-23T20:00:08.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-10-23T20:00:08.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Comptes"
+                ],
+                "summary": "Créer un compte",
+                "operationId": "d46221922144c672a4a500c7f3755629",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero_compte": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "type_compte": {
+                                        "type": "string",
+                                        "example": "courant"
+                                    },
+                                    "statut": {
+                                        "type": "string",
+                                        "example": "actif"
+                                    },
+                                    "archive": {
+                                        "type": "string",
+                                        "example": "non"
+                                    },
+                                    "client_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Compte créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Compte créé avec succès."
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Comptes",
+            "description": "Comptes"
+        }
+    ]
+}
