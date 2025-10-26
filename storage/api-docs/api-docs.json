@@ -2,58 +2,49 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Gestion Compte API",
-        "description": "API pour la gestion des comptes",
+        "description": "API pour la gestion des comptes bancaires",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
-            "description": "Serveur principal"
+            "url": "https://amycollendiaye-gestion-compte.onrender.com",
+            "description": "Serveur de production"
         }
     ],
     "paths": {
-        "/api/comptes/validate": {
-            "post": {
+        "/ndiaye/api/comptes": {
+            "get": {
                 "tags": [
                     "Comptes"
                 ],
-                "summary": "Valider les données d'un compte",
-                "operationId": "2c797980a86d71b2eddb167eb6524a7a",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "numero_compte": {
-                                        "type": "string",
-                                        "nullable": true
-                                    },
-                                    "type_compte": {
-                                        "type": "string",
-                                        "example": "courant"
-                                    },
-                                    "statut": {
-                                        "type": "string",
-                                        "example": "actif"
-                                    },
-                                    "archive": {
-                                        "type": "string",
-                                        "example": "non"
-                                    },
-                                    "client_id": {
-                                        "type": "string",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "summary": "Lister les comptes",
+                "description": "Récupère la liste paginée des comptes",
+                "operationId": "getComptes",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Numéro de la page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Nombre d'éléments par page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
-                        "description": "Validation réussie",
+                        "description": "Liste des comptes récupérée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -64,28 +55,143 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Données du compte valides."
+                                            "example": "liste les comptes demandes"
                                         },
                                         "data": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Erreur de validation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "b18818b7-335d-3a8b-9c77-8927c30d6acf"
+                                                    },
+                                                    "numero": {
+                                                        "type": "string",
+                                                        "example": "ORANGEBANK-52113367"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "cheque"
+                                                    },
+                                                    "solde": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 0
+                                                    },
+                                                    "archive": {
+                                                        "type": "string",
+                                                        "example": "non_supprime"
+                                                    },
+                                                    "client": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "d4f29175-dfad-37aa-9e96-37f47dd4f2a2"
+                                                            },
+                                                            "cni": {
+                                                                "type": "string",
+                                                                "example": "ML787246"
+                                                            },
+                                                            "user": {
+                                                                "properties": {
+                                                                    "nom": {
+                                                                        "type": "string",
+                                                                        "example": "Orin"
+                                                                    },
+                                                                    "prenom": {
+                                                                        "type": "string",
+                                                                        "example": "Haley"
+                                                                    },
+                                                                    "telephone": {
+                                                                        "type": "string",
+                                                                        "example": "539.756.2409"
+                                                                    },
+                                                                    "email": {
+                                                                        "type": "string",
+                                                                        "example": "hilario.sanford@example.net"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "statut": {
+                                                        "type": "string",
+                                                        "example": "actif"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
                                         },
-                                        "errors": {
+                                        "metadonnees": {
+                                            "properties": {
+                                                "date_creation": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-10-26T19:51:55+00:00"
+                                                },
+                                                "version": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "currentPage": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "totalPages": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "totalItems": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "itemsPerPage": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "hasNext": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "hasPrevious": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "self": {
+                                                    "type": "string",
+                                                    "example": "http://localhost:8000/ndiaye/api/comptes?page=1"
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "first": {
+                                                    "type": "string",
+                                                    "example": "http://localhost:8000/ndiaye/api/comptes?page=1"
+                                                },
+                                                "last": {
+                                                    "type": "string",
+                                                    "example": "http://localhost:8000/ndiaye/api/comptes?page=1"
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -97,16 +203,28 @@
                 }
             }
         },
-        "/api/comptes": {
+        "/ndiaye/api/comptes/{numero}": {
             "get": {
                 "tags": [
                     "Comptes"
                 ],
-                "summary": "Lister tous les comptes",
-                "operationId": "4059c2a0b4cce9e57227146f5b16138d",
+                "summary": "Récupérer un compte par numéro",
+                "description": "Récupère les détails d'un compte spécifique par son numéro",
+                "operationId": "getCompteByNumero",
+                "parameters": [
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "description": "Numéro du compte",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Liste des comptes",
+                        "description": "Compte trouvé avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -117,112 +235,70 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "liste les comptes"
+                                            "example": "rechercheer avec succes"
                                         },
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "string",
-                                                        "example": "a26341aa-bbf1-3107-ab48-c9455fc181a7"
-                                                    },
-                                                    "numero_compte": {
-                                                        "type": "string",
-                                                        "example": "ORANGEBANK-23994273"
-                                                    },
-                                                    "type_compte": {
-                                                        "type": "string",
-                                                        "example": "cheque"
-                                                    },
-                                                    "statut": {
-                                                        "type": "string",
-                                                        "example": "inactif"
-                                                    },
-                                                    "client_id": {
-                                                        "type": "string",
-                                                        "example": "397c23b1-973d-36d0-8f06-4750fa8b2b56"
-                                                    },
-                                                    "archive": {
-                                                        "type": "string",
-                                                        "example": "supprime"
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-10-23T20:00:08.000000Z"
-                                                    },
-                                                    "updated_at": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-10-23T20:00:08.000000Z"
-                                                    }
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "b18818b7-335d-3a8b-9c77-8927c30d6acf"
                                                 },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Comptes"
-                ],
-                "summary": "Créer un compte",
-                "operationId": "d46221922144c672a4a500c7f3755629",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "numero_compte": {
-                                        "type": "string",
-                                        "nullable": true
-                                    },
-                                    "type_compte": {
-                                        "type": "string",
-                                        "example": "courant"
-                                    },
-                                    "statut": {
-                                        "type": "string",
-                                        "example": "actif"
-                                    },
-                                    "archive": {
-                                        "type": "string",
-                                        "example": "non"
-                                    },
-                                    "client_id": {
-                                        "type": "string",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Compte créé avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Compte créé avec succès."
-                                        },
-                                        "data": {
+                                                "numero": {
+                                                    "type": "string",
+                                                    "example": "ORANGEBANK-52113367"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "cheque"
+                                                },
+                                                "solde": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 0
+                                                },
+                                                "archive": {
+                                                    "type": "string",
+                                                    "example": "non_supprime"
+                                                },
+                                                "client": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string",
+                                                            "example": "d4f29175-dfad-37aa-9e96-37f47dd4f2a2"
+                                                        },
+                                                        "cni": {
+                                                            "type": "string",
+                                                            "example": "ML787246"
+                                                        },
+                                                        "user": {
+                                                            "properties": {
+                                                                "nom": {
+                                                                    "type": "string",
+                                                                    "example": "Orin"
+                                                                },
+                                                                "prenom": {
+                                                                    "type": "string",
+                                                                    "example": "Haley"
+                                                                },
+                                                                "telephone": {
+                                                                    "type": "string",
+                                                                    "example": "539.756.2409"
+                                                                },
+                                                                "email": {
+                                                                    "type": "string",
+                                                                    "example": "hilario.sanford@example.net"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "statut": {
+                                                    "type": "string",
+                                                    "example": "actif"
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -231,8 +307,8 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Erreur de validation",
+                    "404": {
+                        "description": "Aucun compte trouvé",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -241,8 +317,144 @@
                                             "type": "boolean",
                                             "example": false
                                         },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun compte trouvé"
+                                        },
                                         "errors": {
+                                            "type": "object",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ndiaye/api/comptes/telephone/{telephone}": {
+            "get": {
+                "tags": [
+                    "Comptes"
+                ],
+                "summary": "Récupérer un compte par téléphone",
+                "description": "Récupère les détails d'un compte spécifique par le téléphone du client",
+                "operationId": "getCompteByTelephone",
+                "parameters": [
+                    {
+                        "name": "telephone",
+                        "in": "path",
+                        "description": "Numéro de téléphone du client",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Compte trouvé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "trouve avec succces"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "b18818b7-335d-3a8b-9c77-8927c30d6acf"
+                                                },
+                                                "numero": {
+                                                    "type": "string",
+                                                    "example": "ORANGEBANK-52113367"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "cheque"
+                                                },
+                                                "solde": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 0
+                                                },
+                                                "archive": {
+                                                    "type": "string",
+                                                    "example": "non_supprime"
+                                                },
+                                                "client": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string",
+                                                            "example": "d4f29175-dfad-37aa-9e96-37f47dd4f2a2"
+                                                        },
+                                                        "cni": {
+                                                            "type": "string",
+                                                            "example": "ML787246"
+                                                        },
+                                                        "user": {
+                                                            "properties": {
+                                                                "nom": {
+                                                                    "type": "string",
+                                                                    "example": "Orin"
+                                                                },
+                                                                "prenom": {
+                                                                    "type": "string",
+                                                                    "example": "Haley"
+                                                                },
+                                                                "telephone": {
+                                                                    "type": "string",
+                                                                    "example": "539.756.2409"
+                                                                },
+                                                                "email": {
+                                                                    "type": "string",
+                                                                    "example": "hilario.sanford@example.net"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "statut": {
+                                                    "type": "string",
+                                                    "example": "actif"
+                                                }
+                                            },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aucun compte trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le numéro de compte est requis"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
