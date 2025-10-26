@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             \Database\Seeders\ClientSeeder::class,
             \Database\Seeders\CompteSeeder::class,
+            \Database\Seeders\TransactionSeeder::class
         ]);
 
         // \App\Models\User::factory()->create([

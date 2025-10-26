@@ -18,4 +18,14 @@ class Client extends Model
 
 
     ];
+     public function comptes()
+    {
+        return $this->hasMany(Compte::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

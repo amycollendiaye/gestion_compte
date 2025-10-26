@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\NonSuppCompte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,27 @@ class Compte extends Model
         'statut',
         'archive',
         'client_id',
+        "motif_blocage"
      ];
+       protected static function booted()
+    {
+        static::addGlobalScope(new NonSuppCompte);
+    }
+     public function scopeNumero($query, string $numero)
+    {
+        return $query->where('numero_compte', $numero);
+    }
+   public function scopeTelephone($query, string $telephone)
+    {
+        
+        return $query->whereHas('client.user', function ($q) use ($telephone) {
+        $q->where('telephone', $telephone);
+    });
+
+        }
+
+        const CREATED_AT = 'dateCreation';
+    const UPDATED_AT = 'derniereModification';
       public function client()
      {
         return $this->belongsTo(Client::class);

@@ -21,4 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Routes pour les comptes
 Route::post('/comptes/validate', [CompteController::class, 'validateCompte']);
-Route::apiResource('comptes', CompteController::class);
+Route::apiResource('comptes', CompteController::class)->except('show');
+Route::get('comptes/{numero}', [CompteController::class, 'showByNumero']);
+Route::get('comptes/telephone/{telephone}',[CompteController::class,"showBytelephone"]);
+
+
+
+
+
+

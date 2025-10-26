@@ -5,7 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class telephone implements ValidationRule
+class cniClient implements ValidationRule
 {
     /**
      * Run the validation rule.
@@ -14,8 +14,8 @@ class telephone implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!preg_match('/^(\+221|00221)?[7-9][0-9]{8}$/', $value)) {
-            $fail("Le $attribute n'est pas un numéro de téléphone valide.");
+        if (!preg_match('/^\d{9,12}$/', $value)) {
+            $fail("Le numéro de CNI n'est pas valide.");
+        }
     }
-}
 }

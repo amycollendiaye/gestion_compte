@@ -19,7 +19,9 @@ return new class extends Migration
              $table->uuid('client_id');
              $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
              $table->enum("archive",['supprime','non_supprime']);
-             $table->timestamps();
+             $table->timestamp('dateCreation')->useCurrent();
+            $table->timestamp('derniereModification')->useCurrent()->useCurrentOnUpdate();
+             $table->string('motif_blocage')->nullable();
             $table->index(['numero_compte',"client_id","statut","type_compte",'archive']);
 
         });

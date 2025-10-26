@@ -14,16 +14,17 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('compte_id'); 
-            $table->enum('type', ['depot', 'retrait']);
+            $table->enum('type_transaction', ['depot', 'retrait','virement','frais']);
             $table->decimal('montant', 15, 2); 
             $table->string('devise', 10)->default('XOF');
             $table->text('description')->nullable();
             $table->dateTime('date_transaction');
-            $table->enum('statut', ['en_attente', 'validee', 'annulee'])->default('en_attente');
+        $table->enum('statut', ['en_attente', 'validee', 'annulee'])->default('en_attente');
             $table->timestamps();
 
+            
             $table->foreign('compte_id')->references('id')->on('comptes')->onDelete('cascade');
-
+            $table->index(["compte_id","type_transaction","montant","devise",'description','date_transaction',"statut"]);
         });
     }
 

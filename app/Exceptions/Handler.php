@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exceptions;
+    use App\Exceptions\CompteNotFoundException;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
@@ -27,4 +28,17 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+public function render($request, Throwable $exception)
+{
+    if ($exception instanceof CompteNotFoundException) {
+        return response()->json([
+            'success' => false,
+            'message' => $exception->getMessage(),
+        ], $exception->getCode());
+    }
+
+    return parent::render($request, $exception);
+}
+
 }

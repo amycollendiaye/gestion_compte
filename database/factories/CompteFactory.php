@@ -24,6 +24,7 @@ class CompteFactory extends Factory
             'statut' => fake()->randomElement(['actif', 'inactif', 'bloque']),
             'archive' => fake()->randomElement(['supprime', 'non_supprime']),
             'client_id' => Client::factory(), 
+            "motif_blocage"=>fake()->sentence()
            
         ];
     }
