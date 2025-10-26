@@ -175,7 +175,7 @@ class CompteController extends Controller
            return $this->errorResponse("Le numéro de compte est requis", 422);
      }
            $compte=$this->compteService->getCompteNum($numero);
-           if($compte) return $this->successResponse($compte,"rechercheer avec succes",200);
+           if($compte) return $this->successResponse("rechercheer avec succes", $compte, 200);
            return $this->errorResponse("Aucun compte trouvé", 404);
         }
 
@@ -237,7 +237,7 @@ class CompteController extends Controller
 
            $compte= $this->compteService->getCompteByTelephone($telephone);
            if(!$compte) return $this->errorResponse("Le numéro de compte est requis",404);
-           return $this->successResponse($compte,'trouve avec succces',200);
+           return $this->successResponse('trouve avec succces', $compte, 200);
      }
 
 }
