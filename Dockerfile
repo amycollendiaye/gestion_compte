@@ -35,9 +35,6 @@ RUN mkdir -p storage/framework/{cache,data,sessions,testing,views} \
     && chown -R laravel:laravel /var/www/html \
     && chmod -R 775 storage bootstrap/cache
 
-# Copier la configuration de production
-COPY .env.production .env
-
 # Copier et rendre exécutable le script de démarrage
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
