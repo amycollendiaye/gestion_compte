@@ -15,7 +15,7 @@ return [
     |
     */
  
-// erreurs de cors
+// erreurs de corshjkjhuhi
     'paths' => ['ndiaye/api/v1/*'],
 
     'allowed_methods' => ['PUT','DELETE','POST','PATCH','GET','OPTIONS'],
