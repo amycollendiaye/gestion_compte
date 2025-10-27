@@ -1,43 +1,51 @@
-# Image PHP 8.3 avec Nginx
-FROM webdevops/php-nginx:8.3
+# Étape 1: Build des dépendances PHP
+FROM composer:2.6 AS composer-build
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY composer.json composer.lock ./
+
+# Installer les dépendances PHP sans scripts post-install
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
+
+# Étape 2: Image finale pour l'application
+FROM php:8.3-fpm-alpine
+
+# Installer les extensions PHP nécessaires et bash pour Render
+RUN apk add --no-cache postgresql-dev bash \
+    && docker-php-ext-install pdo pdo_pgsql
+
+# Créer un utilisateur non-root
+RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/sh -D laravel
 
 # Définir le répertoire de travail
-WORKDIR /var/www/html 
+WORKDIR /var/www/html
 
-# Permettre à Composer de tourner en root
-ENV COMPOSER_ALLOW_SUPERUSER=1
+# Copier les dépendances installées depuis l'étape de build
+COPY --from=composer-build /app/vendor ./vendor
 
-# Copier le projet dans le conteneur
+# Copier le reste du code de l'application
 COPY . .
 
-# Installer les dépendances PHP
-RUN composer install --optimize-autoloader --no-dev
+# Créer les répertoires nécessaires et définir les permissions - avant de changer d'utilisateur
+RUN mkdir -p storage/framework/{cache,data,sessions,testing,views} \
+    && mkdir -p storage/logs \
+    && mkdir -p bootstrap/cache \
+    && chown -R laravel:laravel /var/www/html \
+    && chmod -R 775 storage bootstrap/cache
 
 # Copier la configuration de production
 COPY .env.production .env
 
-# Copier le script de démarrage et le rendre exécutable
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+# Copier et rendre exécutable le script de démarrage
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
-# Créer les dossiers Laravel si absents
-RUN mkdir -p storage bootstrap/cache
+USER root
 
-# Définir les permissions pour Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Exposer le port 9000 (port par défaut de Render)
+EXPOSE 9000
 
-# Générer la documentation Swagger (ignore l'erreur si problème)
-RUN php artisan l5-swagger:generate || true
-
-# Variables d'environnement pour Webdevops + Laravel
-ENV SKIP_COMPOSER 1
-ENV WEBROOT /app/public
-ENV PHP_ERRORS_STDERR 1
-ENV RUN_SCRIPTS 1
-ENV REAL_IP_HEADER 1
-ENV APP_ENV production
-ENV APP_DEBUG false
-ENV LOG_CHANNEL stderr
-
-# Démarrer l'application avec ton script
-CMD ["/start.sh"]
+# Commande par défaut pour Render
+CMD ["/usr/local/bin/start.sh"]
