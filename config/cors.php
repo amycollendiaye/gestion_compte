@@ -16,7 +16,7 @@ return [
     */
  
 // erreurs de cors
-    'paths' => ['api/v1.0.0'],
+    'paths' => ['ndiaye/api/v1/*'],
 
     'allowed_methods' => ['PUT','DELETE','POST','PATCH','GET','OPTIONS'],
 
