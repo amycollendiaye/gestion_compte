@@ -1,81 +1,35 @@
-# Étape 1: Build des dépendances PHP
-FROM composer:2.6 AS composer-build
+FROM webdevops/php-nginx:8.3
 
-WORKDIR /app
-
-# Copier les fichiers de dépendances
-COPY composer.json composer.lock ./
-
-# Installer les dépendances PHP sans scripts post-install
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
-
-# Étape 2: Image finale pour l'application
-FROM php:8.3-fpm-alpine
-
-# Installer les extensions PHP nécessaires
-RUN apk add --no-cache postgresql-dev \
-    && docker-php-ext-install pdo pdo_pgsql
-
-# Créer un utilisateur non-root
-RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/sh -D laravel
-
-# Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les dépendances installées depuis l'étape de build
-COPY --from=composer-build /app/vendor ./vendor
+# Allow composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Copier le reste du code de l'application
 COPY . .
 
-# Créer les répertoires nécessaires et définir les permissions
-RUN mkdir -p storage/framework/{cache,data,sessions,testing,views} \
-    && mkdir -p storage/logs \
-    && mkdir -p bootstrap/cache \
-    && chown -R laravel:laravel /var/www/html \
-    && chmod -R 775 storage bootstrap/cache
+# Installer les dépendances PHP
+RUN composer install --optimize-autoloader --no-dev
 
-# Créer un fichier .env minimal pour le build
-RUN echo "APP_NAME=Laravel" > .env && \
-    echo "APP_ENV=production" >> .env && \
-    echo "APP_KEY=" >> .env && \
-    echo "APP_DEBUG=false" >> .env && \
-    echo "APP_URL=http://localhost" >> .env && \
-    echo "" >> .env && \
-    echo "LOG_CHANNEL=stack" >> .env && \
-    echo "LOG_LEVEL=error" >> .env && \
-    echo "" >> .env && \
-    echo "DB_CONNECTION=pgsql" >> .env && \
-    echo "DB_HOST=${DB_HOST}" >> .env && \
-    echo "DB_PORT=${DB_PORT}" >> .env && \
-    echo "DB_DATABASE=${DB_DATABASE}" >> .env && \
-    echo "DB_USERNAME=${DB_USERNAME}" >> .env && \
-    echo "DB_PASSWORD=${DB_PASSWORD}" >> .env && \
-    echo "" >> .env && \
-    echo "CACHE_DRIVER=file" >> .env && \
-    echo "SESSION_DRIVER=file" >> .env && \
-    echo "QUEUE_CONNECTION=sync" >> .env
+# Copier la configuration de production
+COPY .env.production .env
 
-# Changer les permissions du fichier .env pour l'utilisateur laravel
-RUN chown laravel:laravel .env
+# Permissions pour Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Générer la clé d'application et optimiser
-USER laravel
-RUN php artisan key:generate --force && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
-USER root
+# Générer la documentation Swagger
+RUN php artisan l5-swagger:generate
+# Image config
+ENV SKIP_COMPOSER 1
+ENV WEBROOT /var/www/html/public
+ENV PHP_ERRORS_STDERR 1
+ENV RUN_SCRIPTS 1
+ENV REAL_IP_HEADER 1
 
-# Copier le script d'entrée
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Laravel config
+ENV APP_ENV production
+ENV APP_DEBUG false
+ENV LOG_CHANNEL stderr
 
-# Passer à l'utilisateur non-root
-USER laravel
 
-# Exposer le port 8000
-EXPOSE 8000
 
-# Commande par défaut
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["/start.sh"]

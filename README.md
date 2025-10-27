@@ -12,3 +12,10 @@ pour  la realisation du endpoint en utilisation les  trait un service un resourc
   nous avon le service   qui gere et   aplle le represention des donnne  cest le ressource collection (pour  pour chaque resource  a  uneresssource de collection      une collection est un ensemble de  ressource de    estutilser par la collection de ressource  qui sera utilse ensuite par le service  ce dernier utilse   par le controller   cest a dire le controller va utilser le trait et le collection de  ressource)
    _________________ SCOPE _____________________:
    Parfait ! On va voir ce qu’est un scope et comment créer un scope global pour récupérer uniquement les comptes non supprimés.
+   pour mon deployement dur render  jai utilser docker file 
+    jai d'abord :sudo docker build -t gestioncomptes .
+ ensuite creer le tag:sudo docker tag gestioncomptes amycolle/amycollendiaye-gest-comptes
+       ->docker login
+        et  push de imahe sur docker hub :sudo docker push  amycolle/amycollendiaye-gest-comptes
+
+ pour faire la mise a  jouse  de version php en laravel il faut composer update
