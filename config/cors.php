@@ -15,14 +15,14 @@ return [
     |
     */
  
-
+// erreurs de cors
     'paths' => ['api/v1.0.0'],
 
     'allowed_methods' => ['PUT','DELETE','POST','PATCH','GET','OPTIONS'],
 
-    'allowed_origins' => ['http://localhost:8000', 'http://127.0.0.1:8000'],
+    'allowed_origins' => ['*'],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['*'],
 
     'allowed_headers' => ['*'],
 

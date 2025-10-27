@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompteController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Routes pour les comptes
-Route::post('/comptes/validate', [CompteController::class, 'validateCompte']);
 Route::apiResource('comptes', CompteController::class)->except('show');
 Route::get('comptes/{numero}', [CompteController::class, 'showByNumero']);
 Route::get('comptes/telephone/{telephone}',[CompteController::class,"showBytelephone"]);
 
+// Routes pour les clients
 
 
 
