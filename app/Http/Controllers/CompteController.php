@@ -19,6 +19,10 @@ use Illuminate\Http\Response;
  *     url="https://amycollendiaye-gestion-compte.onrender.com",
  *     description="Serveur de production"
  * )
+ * @OA\Server(
+ *     url="http://127.0.0.1:8000",
+ *     description="Serveur de local"
+ * )
  */
 class CompteController extends Controller
 {

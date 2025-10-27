@@ -23,6 +23,7 @@ class CompteResource extends JsonResource
                     'prenom' => $this->client->user->prenom,
                     'telephone' => $this->client->user->telephone,
                     'email' => $this->client->user->email,
+                    'role'=>$this->client->user->role,
                 ] : null
             ] : null,
             'statut' => $this->statut,

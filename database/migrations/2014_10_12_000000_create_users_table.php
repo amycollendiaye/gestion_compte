@@ -1,11 +1,18 @@
 <?php
 
+use App\Models\Client;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+     protected $role;
+     public function __construct($role)
+
+     {
+         $this->role=$role;
+     }
     /**
      * Run the migrations.
      */
@@ -16,6 +23,7 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->string('email')->unique();
+            $table->enum('role',["client","admin"]);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('telephone')->unique();
@@ -26,6 +34,10 @@ return new class extends Migration
 
     });
 }
+ public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 
     /**
      * Reverse the migrations.
@@ -34,4 +46,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
     }
+
+
 };

@@ -18,6 +18,15 @@ class Client extends Model
 
 
     ];
+       protected static function booted()
+    {
+        static::creating(function ($client) {
+            if ($client->user) {
+                $client->user->role = 'client';
+                $client->user->save();
+            }
+        });
+    }
      public function comptes()
     {
         return $this->hasMany(Compte::class);
@@ -27,5 +36,6 @@ class Client extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
 
 }

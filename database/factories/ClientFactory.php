@@ -19,7 +19,9 @@ class ClientFactory extends Factory
     {
         return [
              'id'=>fake()->uuid(),
-            "user_id"=>User::factory(),
+            "user_id"=>User::factory()->state([
+                'role'=>"client"
+            ]),
             'cni'=> strtoupper(fake()->bothify('??######'))
         ];
     }

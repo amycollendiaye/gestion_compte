@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompteController;
@@ -23,6 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Routes pour les comptes
+Route::post('/auth', [AuthController::class, 'login']);
+
 Route::apiResource('comptes', CompteController::class)->except('show');
 Route::get('comptes/{numero}', [CompteController::class, 'showByNumero']);
 Route::get('comptes/telephone/{telephone}',[CompteController::class,"showBytelephone"]);

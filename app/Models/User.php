@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str; // ✅ <--- ajoute cette ligne
+
 
 class User extends Authenticatable
 {
@@ -27,6 +29,7 @@ class User extends Authenticatable
         'telephone',
         'email',
         'password',
+        'role'
 
     ];
 
@@ -49,6 +52,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+      public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
+     public function isClient(): bool
+    {
+        return $this->role === 'client';
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            if (!$user->id) {
+                $user->id = Str::uuid();
+            }
+        });
     
+}
+
 
 }
