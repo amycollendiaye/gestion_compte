@@ -12,7 +12,7 @@
         }
     ],
     "paths": {
-        "/ndiaye/api/comptes": {
+        "/ndiaye/api/v1/comptes": {
             "get": {
                 "tags": [
                     "Comptes"
@@ -203,7 +203,7 @@
                 }
             }
         },
-        "/ndiaye/api/comptes/{numero}": {
+        "/ndiaye/api/v1/comptes/{numero}": {
             "get": {
                 "tags": [
                     "Comptes"
@@ -334,7 +334,7 @@
                 }
             }
         },
-        "/ndiaye/api/comptes/telephone/{telephone}": {
+        "/ndiaye/api/v1/comptes/telephone/{telephone}": {
             "get": {
                 "tags": [
                     "Comptes"
