@@ -32,7 +32,7 @@ class CompteController extends Controller
 
      /**
       * @OA\Get(
-      *     path="/ndiaye/api/comptes",
+      *     path="/ndiaye/api/v1/comptes",
       *     summary="Lister les comptes",
       *     description="Récupère la liste paginée des comptes",
       *     operationId="getComptes",
@@ -117,7 +117,7 @@ class CompteController extends Controller
 
        /**
         * @OA\Get(
-        *     path="/ndiaye/api/comptes/{numero}",
+        *     path="/ndiaye/api/v1/comptes/{numero}",
         *     summary="Récupérer un compte par numéro",
         *     description="Récupère les détails d'un compte spécifique par son numéro",
         *     operationId="getCompteByNumero",
@@ -181,7 +181,7 @@ class CompteController extends Controller
 
         /**
          * @OA\Get(
-         *     path="/ndiaye/api/comptes/telephone/{telephone}",
+         *     path="/ndiaye/api/v1/comptes/telephone/{telephone}",
          *     summary="Récupérer un compte par téléphone",
          *     description="Récupère les détails d'un compte spécifique par le téléphone du client",
          *     operationId="getCompteByTelephone",
