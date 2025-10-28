@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\NonSuppCompte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,5 +40,10 @@ class Compte extends Model
             // Supprime les espaces et ajoute le préfixe SN
             $this->attributes['numero_compte'] = 'ORANGEBANK-' . str_replace(' ', '', $value);
         }
+    }
+          protected static function booted()
+    {
+        static::addGlobalScope(new NonSuppCompte);
+    
     }
 }

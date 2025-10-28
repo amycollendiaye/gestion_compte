@@ -9,6 +9,8 @@ use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+use function Ramsey\Uuid\v1;
+
 /**
  * @OA\Info(
  *     title="Gestion Compte API",
@@ -245,6 +247,83 @@ class CompteController extends Controller
            return $this->successResponse('trouve avec succces',$compte,200);
      }
 
+/**
+ * @OA\Post(
+ *     path="/ndiaye/api/v1/comptes",
+ *     summary="Créer un nouveau compte",
+ *     description="Crée un nouveau compte bancaire avec les informations du client",
+ *     operationId="createCompte",
+ *     tags={"Comptes"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"type", "solde", "devise", "client"},
+ *             @OA\Property(property="type", type="string", enum={"epargne", "courant", "cheque"}),
+ *             @OA\Property(property="solde", type="number"),
+ *             @OA\Property(property="devise", type="string", enum={"XOF", "EUR", "USD"}),
+ *             @OA\Property(
+ *                 property="client",
+ *                 type="object",
+ *                 required={"titulaire", "email", "telephone", "adresse"},
+ *                 @OA\Property(property="titulaire", type="string"),
+ *                 @OA\Property(property="email", type="string", format="email"),
+ *                 @OA\Property(property="telephone", type="string"),
+ *                 @OA\Property(property="adresse", type="string")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Compte créé avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean"),
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="string"),
+ *                 @OA\Property(property="numeroCompte", type="string"),
+ *                 @OA\Property(property="titulaire", type="string"),
+ *                 @OA\Property(property="type", type="string"),
+ *                 @OA\Property(property="solde", type="number"),
+ *                 @OA\Property(property="devise", type="string"),
+ *                 @OA\Property(property="dateCreation", type="string", format="date-time"),
+ *                 @OA\Property(property="statut", type="string"),
+ *                 @OA\Property(
+ *                     property="metadata",
+ *                     type="object",
+ *                     @OA\Property(property="derniereModification", type="string", format="date-time"),
+ *                     @OA\Property(property="version", type="integer")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Données invalides",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean"),
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(
+ *                 property="errors",
+ *                 type="object"
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur serveur",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean"),
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(
+ *                 property="errors",
+ *                 type="object"
+ *             )
+ *         )
+ *     )
+ * )
+ */
 public function store(CreateCompteRequest $request)
 {
     try {
@@ -255,27 +334,17 @@ public function store(CreateCompteRequest $request)
 
     } catch (\Illuminate\Validation\ValidationException $e) {
  /// je doit  modofier les formatde response dans le trait apiresponse a faire aavant de push
-        return response()->json([
-            'success' => false,
-            'error' => [
+        return  $this->errorResponse("Les données fournies sont invalides",422, ['error' => [
                 'code' => 'VALIDATION_ERROR',
-                'message' => 'Les données fournies sont invalides',
+                'message' => '',
                 'details' => $e->errors(),
-            ]
-        ], 422);
+            ]]);
 
     } catch (\Exception $e) {
 
-        return response()->json([
-            'success' => false,
-            'error' => [
-                'code' => 'SERVER_ERROR',
-                'message' => $e->getMessage(),
-            ]
-        ], 500);
+        return  $this->errorResponse("SERVER_ERROR",500,['message' => $e->getMessage()]);
+        
+    
     }
 }
-
-    
-
-    }
+}

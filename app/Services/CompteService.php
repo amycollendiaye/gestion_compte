@@ -28,23 +28,31 @@ class CompteService{
 
     }
     public function getCompteNum(string $numero){
-          $compte=Compte::numero($numero)->first();
+          $compte = Compte::where('numero_compte', $numero)->first();
           if (!$compte) {
-        throw new CompteNotFoundException("Le compte $numero n'existe pas.");
-    }
-           return new CompteResource( $compte);
+              throw new CompteNotFoundException("Le compte $numero n'existe pas.");
+          }
+          return new CompteResource($compte);
     }
 
 
     public function getCompteBytelephone(string $telephone)
-{
-    $comptes = Compte::telephone($telephone)->get();
-        if (!$comptes) {
-        throw new CompteNotFoundException("Le  $telephone de ce client  n'existe pas. desolle!!!!!");
-    }
-    return new CompteCollection(($comptes));
-
+    {
+        // Normaliser le numéro de téléphone en supprimant les caractères spéciaux
+        $normalizedPhone = preg_replace('/[^0-9]/', '', $telephone);
         
+        // Recherche les comptes liés à l'utilisateur avec ce numéro de téléphone
+        $comptes = Compte::join('users', 'comptes.client_id', '=', 'users.id')
+            ->where('users.telephone', $normalizedPhone)
+            ->select('comptes.*')
+            ->get();
+
+        if ($comptes->isEmpty()) {
+            throw new CompteNotFoundException("Aucun compte trouvé pour le numéro de téléphone $telephone");
+        }
+
+        return new CompteCollection($comptes);
+
     }
 public function createCompte(array $data)
     {
@@ -70,12 +78,10 @@ public function createCompte(array $data)
             }
 
             // Générer un numéro de compte unique
-            $lastCompte = Compte::latest('created_at')->first();
-            $numeroCompte = 'C' . str_pad($lastCompte?->id + 1 ?? 1, 8, '0', STR_PAD_LEFT);
+            
 
             // Créer le compte avec statut actif par défaut
             $compte = Compte::create([
-                'numero_compte' => $numeroCompte,
                 'type' => $data['type'],
                 'solde' => $data['solde'],
                 'devise' => $data['devise'],

@@ -12,6 +12,6 @@ class CompteSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Compte::factory(10)->create();
+        \App\Models\Compte::factory(30)->create();
     }
 }

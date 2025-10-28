@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Routes pour les comptes
 Route::post('/auth', [AuthController::class, 'login']);
-
+Route::post('comptes',[CompteController::class,"store"]);
 Route::apiResource('comptes', CompteController::class)->except('show');
 Route::get('comptes/{numero}', [CompteController::class, 'showByNumero']);
 Route::get('comptes/telephone/{telephone}',[CompteController::class,"showBytelephone"]);

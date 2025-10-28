@@ -21,7 +21,7 @@ class CompteFactory extends Factory
              'id' => fake()->uuid(),
             'numero_compte' => strtoupper(fake()->unique()->bothify('########')), 
             'type_compte' => fake()->randomElement(['epargne', 'cheque', 'courant']),
-            'statut' => fake()->randomElement(['actif', 'inactif', 'bloque']),
+            'statut' => "actif",
             'devise'=>fake()->randomElement(["XOF","EURO","DOLLARS"]),
             'archive' => fake()->randomElement(['supprime', 'non_supprime']),
             'client_id' => Client::factory(), 
