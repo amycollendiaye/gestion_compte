@@ -22,9 +22,11 @@ class CompteFactory extends Factory
             'numero_compte' => strtoupper(fake()->unique()->bothify('########')), 
             'type_compte' => fake()->randomElement(['epargne', 'cheque', 'courant']),
             'statut' => fake()->randomElement(['actif', 'inactif', 'bloque']),
+            'devise'=>fake()->randomElement(["XOF","EURO","DOLLARS"]),
             'archive' => fake()->randomElement(['supprime', 'non_supprime']),
             'client_id' => Client::factory(), 
-            "motif_blocage"=>fake()->sentence()
+            "motif_blocage"=>fake()->sentence(),
+            "solde"=>fake()->randomFloat(),
            
         ];
     }

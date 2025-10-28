@@ -7,12 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-     protected $role;
-     public function __construct($role)
-
-     {
-         $this->role=$role;
-     }
+    
     /**
      * Run the migrations.
      */
@@ -34,10 +29,7 @@ return new class extends Migration
 
     });
 }
- public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
+
 
     /**
      * Reverse the migrations.

@@ -5,7 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class statut_compte implements ValidationRule
+class Devise implements ValidationRule
 {
     /**
      * Run the validation rule.
@@ -13,10 +13,10 @@ class statut_compte implements ValidationRule
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
      protected  array $types;
-     public function __construct( array $types=["actif",'inactif','bloque'])
-     {
-        
-     }
+      public  function __construct(array $types=['XOF','DOLLARS','EUROS'])
+      {
+         $this->types=$types;
+      }
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!in_array(strtolower($value), $this->types)) {

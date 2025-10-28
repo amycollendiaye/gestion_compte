@@ -17,6 +17,8 @@ return new class extends Migration
              $table->enum('type_compte',['epargne','cheque','courant'])->default('courant');
              $table->enum('statut',['actif','inactif','bloque'])->default('actif'); 
              $table->uuid('client_id');
+            $table->decimal('solde', 15, 2)->default(0);
+             $table->enum('devise',["XOF","EURO","DOLLARS"]);
              $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
              $table->enum("archive",['supprime','non_supprime']);
              $table->timestamp('dateCreation')->useCurrent();

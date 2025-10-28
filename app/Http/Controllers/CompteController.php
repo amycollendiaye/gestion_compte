@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateCompteRequest;
 use App\Models\Compte;
 use App\Services\CompteService;
 use App\Traits\ApiResponse;
@@ -244,4 +245,37 @@ class CompteController extends Controller
            return $this->successResponse('trouve avec succces',$compte,200);
      }
 
+public function store(CreateCompteRequest $request)
+{
+    try {
+        $compte = $this->compteService->createCompte($request->validated());
+           return $this->successResponse('Compte créé avec succès',$compte,200);
+
+        
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+ /// je doit  modofier les formatde response dans le trait apiresponse a faire aavant de push
+        return response()->json([
+            'success' => false,
+            'error' => [
+                'code' => 'VALIDATION_ERROR',
+                'message' => 'Les données fournies sont invalides',
+                'details' => $e->errors(),
+            ]
+        ], 422);
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'success' => false,
+            'error' => [
+                'code' => 'SERVER_ERROR',
+                'message' => $e->getMessage(),
+            ]
+        ], 500);
+    }
 }
+
+    
+
+    }

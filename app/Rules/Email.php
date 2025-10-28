@@ -5,14 +5,14 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class emailUser implements ValidationRule
+class Email implements ValidationRule
 {
     /**
      * Run the validation rule.
      *
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+      public function validate(string $attribute, mixed $value, Closure $fail): void
     {
             $pattern = '/^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,6}$/';
 
@@ -20,5 +20,4 @@ class emailUser implements ValidationRule
             $fail("Le champ $attribute n'a pas un format email valide.");
         }
     }
-    }
-
+}
