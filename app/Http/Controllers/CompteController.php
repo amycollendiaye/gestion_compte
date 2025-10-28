@@ -11,109 +11,67 @@ use Illuminate\Http\Response;
 
 use function Ramsey\Uuid\v1;
 
+
+
 /**
- * @OA\Info(
- *     title="Gestion Compte API",
- *     version="1.0.0",
- *     description="API pour la gestion des comptes bancaires"
- * )
- *
- * @OA\Server(
- *     url="https://amycollendiaye-gestion-compte.onrender.com",
- *     description="Serveur de production"
- * )
- * @OA\Server(
- *     url="http://127.0.0.1:8000",
- *     description="Serveur de local"
+ * @OA\Tag(
+ *     name="Comptes",
+ *     description="Gestion des comptes bancaires wane"
  * )
  */
 class CompteController extends Controller
 {
-   use ApiResponse;
+    use ApiResponse;
 
-    protected $compteService;
-     public  function __construct(CompteService $compteService)
-     {
-          $this->compteService=$compteService;
-     }
+     protected $compteService;
+      public  function __construct(CompteService $compteService)
+      {
+           $this->compteService=$compteService;
+      }
 
-     /**
-      * @OA\Get(
-      *     path="/ndiaye/api/v1/comptes",
-      *     summary="Lister les comptes",
-      *     description="Récupère la liste paginée des comptes",
-      *     operationId="getComptes",
-      *     tags={"Comptes"},
-      *     @OA\Parameter(
-      *         name="page",
-      *         in="query",
-      *         description="Numéro de la page",
-      *         required=false,
-      *         @OA\Schema(type="integer", default=1)
-      *     ),
-      *     @OA\Parameter(
-      *         name="limit",
-      *         in="query",
-      *         description="Nombre d'éléments par page",
-      *         required=false,
-      *         @OA\Schema(type="integer", default=5)
-      *     ),
-      *     @OA\Response(
-      *         response=200,
-      *         description="Liste des comptes récupérée avec succès",
-      *         @OA\JsonContent(
-      *             @OA\Property(property="success", type="boolean", example=true),
-      *             @OA\Property(property="message", type="string", example="liste les comptes demandes"),
-      *             @OA\Property(
-      *                 property="data",
-      *                 type="array",
-      *                 @OA\Items(
-      *                     @OA\Property(property="id", type="string", example="b18818b7-335d-3a8b-9c77-8927c30d6acf"),
-      *                     @OA\Property(property="numero", type="string", example="ORANGEBANK-52113367"),
-      *                     @OA\Property(property="type", type="string", example="cheque"),
-      *                     @OA\Property(property="solde", type="number", format="float", example=0),
-      *                     @OA\Property(property="archive", type="string", example="non_supprime"),
-      *                     @OA\Property(
-      *                         property="client",
-      *                         @OA\Property(property="id", type="string", example="d4f29175-dfad-37aa-9e96-37f47dd4f2a2"),
-      *                         @OA\Property(property="cni", type="string", example="ML787246"),
-      *                         @OA\Property(
-      *                             property="user",
-      *                             @OA\Property(property="nom", type="string", example="Orin"),
-      *                             @OA\Property(property="prenom", type="string", example="Haley"),
-      *                             @OA\Property(property="telephone", type="string", example="539.756.2409"),
-      *                             @OA\Property(property="email", type="string", example="hilario.sanford@example.net")
-      *                         )
-      *                     ),
-      *                     @OA\Property(property="statut", type="string", example="actif")
-      *                 )
-      *             ),
-      *             @OA\Property(
-      *                 property="metadonnees",
-      *                 @OA\Property(property="date_creation", type="string", format="date-time", example="2025-10-26T19:51:55+00:00"),
-      *                 @OA\Property(property="version", type="integer", example=1)
-      *             ),
-      *             @OA\Property(
-      *                 property="pagination",
-      *                 @OA\Property(property="currentPage", type="integer", example=1),
-      *                 @OA\Property(property="totalPages", type="integer", example=1),
-      *                 @OA\Property(property="totalItems", type="integer", example=4),
-      *                 @OA\Property(property="itemsPerPage", type="integer", example=5),
-      *                 @OA\Property(property="hasNext", type="boolean", example=false),
-      *                 @OA\Property(property="hasPrevious", type="boolean", example=false)
-      *             ),
-      *             @OA\Property(
-      *                 property="links",
-      *                 @OA\Property(property="self", type="string", example="http://localhost:8000/ndiaye/api/comptes?page=1"),
-      *                 @OA\Property(property="next", type="string", nullable=true, example=null),
-      *                 @OA\Property(property="prev", type="string", nullable=true, example=null),
-      *                 @OA\Property(property="first", type="string", example="http://localhost:8000/ndiaye/api/comptes?page=1"),
-      *                 @OA\Property(property="last", type="string", example="http://localhost:8000/ndiaye/api/comptes?page=1")
-      *             )
-      *         )
-      *     )
-      * )
-      */
+
+   /**
+    * @OA\Get(
+    *     path="/ndiaye/api/v1/comptes",
+    *     summary="Lister les comptes",
+    *     description="Récupère une liste paginée des comptes bancaires",
+    *     operationId="listComptes",
+    *     tags={"Comptes"},
+    *     @OA\Parameter(
+    *         name="limit",
+    *         in="query",
+    *         description="Nombre d'éléments par page",
+    *         required=false,
+    *         @OA\Schema(type="integer", default=5, minimum=1, maximum=100)
+    *     ),
+    *     @OA\Parameter(
+    *         name="page",
+    *         in="query",
+    *         description="Numéro de la page",
+    *         required=false,
+    *         @OA\Schema(type="integer", default=1, minimum=1)
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Liste des comptes récupérée avec succès",
+    *         @OA\JsonContent(
+    *             
+    *                 
+    *                     )
+    *                 ),
+    *                 
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=500,
+    *         description="Erreur serveur",
+    *         @OA\JsonContent(
+    *            
+    *         )
+    *     )
+    * )
+    */
       public function index (Request $request){
        $limit=$request->input('limit',5);
        $page=$request->input('page',1);
@@ -122,60 +80,35 @@ class CompteController extends Controller
 
        }
 
-       /**
-        * @OA\Get(
-        *     path="/ndiaye/api/v1/comptes/{numero}",
-        *     summary="Récupérer un compte par numéro",
-        *     description="Récupère les détails d'un compte spécifique par son numéro",
-        *     operationId="getCompteByNumero",
-        *     tags={"Comptes"},
-        *     @OA\Parameter(
-        *         name="numero",
-        *         in="path",
-        *         description="Numéro du compte",
-        *         required=true,
-        *         @OA\Schema(type="string")
-        *     ),
-        *     @OA\Response(
-        *         response=200,
-        *         description="Compte trouvé avec succès",
-        *         @OA\JsonContent(
-        *             @OA\Property(property="success", type="boolean", example=true),
-        *             @OA\Property(property="message", type="string", example="rechercheer avec succes"),
-        *             @OA\Property(
-        *                 property="data",
-        *                 @OA\Property(property="id", type="string", example="b18818b7-335d-3a8b-9c77-8927c30d6acf"),
-        *                 @OA\Property(property="numero", type="string", example="ORANGEBANK-52113367"),
-        *                 @OA\Property(property="type", type="string", example="cheque"),
-        *                 @OA\Property(property="solde", type="number", format="float", example=0),
-        *                 @OA\Property(property="archive", type="string", example="non_supprime"),
-        *                 @OA\Property(
-        *                     property="client",
-        *                     @OA\Property(property="id", type="string", example="d4f29175-dfad-37aa-9e96-37f47dd4f2a2"),
-        *                     @OA\Property(property="cni", type="string", example="ML787246"),
-        *                     @OA\Property(
-        *                         property="user",
-        *                         @OA\Property(property="nom", type="string", example="Orin"),
-        *                         @OA\Property(property="prenom", type="string", example="Haley"),
-        *                         @OA\Property(property="telephone", type="string", example="539.756.2409"),
-        *                         @OA\Property(property="email", type="string", example="hilario.sanford@example.net")
-        *                     )
-        *                 ),
-        *                 @OA\Property(property="statut", type="string", example="actif")
-        *             )
-        *         )
-        *     ),
-        *     @OA\Response(
-        *         response=404,
-        *         description="Aucun compte trouvé",
-        *         @OA\JsonContent(
-        *             @OA\Property(property="success", type="boolean", example=false),
-        *             @OA\Property(property="message", type="string", example="Aucun compte trouvé"),
-        *             @OA\Property(property="errors", type="object", nullable=true)
-        *         )
-        *     )
-        * )
-        */
+
+   /**
+    * @OA\Get(
+    *     path="/ndiaye/api/v1/comptes/{numero}",
+    *     summary="Rechercher un compte par numéro",
+    *     description="Récupère les détails d'un compte bancaire spécifique par son numéro",
+    *     operationId="getCompteByNumero",
+    *     tags={"Comptes"},
+    *     @OA\Parameter(
+    *         name="numero",
+    *         in="path",
+    *         description="Numéro du compte bancaire",
+    *         required=true,
+    *         
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Compte trouvé avec succès",
+    *         @OA\JsonContent(
+    *             
+    *             
+    *                 
+    *            
+    *         )
+    *     ),
+    *    
+    *     )
+    * )
+    */
         public function showBynumero($numero){
              // $numero=$request->input('numero');  j'utilse cette approche si  les donnes   passe par le cors de la rquete cesta dire post put ou patch
            if (!$numero) {
@@ -186,60 +119,36 @@ class CompteController extends Controller
            return $this->errorResponse("Aucun compte trouvé", 404);
         }
 
-        /**
-         * @OA\Get(
-         *     path="/ndiaye/api/v1/comptes/telephone/{telephone}",
-         *     summary="Récupérer un compte par téléphone",
-         *     description="Récupère les détails d'un compte spécifique par le téléphone du client",
-         *     operationId="getCompteByTelephone",
-         *     tags={"Comptes"},
-         *     @OA\Parameter(
-         *         name="telephone",
-         *         in="path",
-         *         description="Numéro de téléphone du client",
-         *         required=true,
-         *         @OA\Schema(type="string")
-         *     ),
-         *     @OA\Response(
-         *         response=200,
-         *         description="Compte trouvé avec succès",
-         *         @OA\JsonContent(
-         *             @OA\Property(property="success", type="boolean", example=true),
-         *             @OA\Property(property="message", type="string", example="trouve avec succces"),
-         *             @OA\Property(
-        *                 property="data",
-        *                 @OA\Property(property="id", type="string", example="b18818b7-335d-3a8b-9c77-8927c30d6acf"),
-        *                 @OA\Property(property="numero", type="string", example="ORANGEBANK-52113367"),
-        *                 @OA\Property(property="type", type="string", example="cheque"),
-        *                 @OA\Property(property="solde", type="number", format="float", example=0),
-        *                 @OA\Property(property="archive", type="string", example="non_supprime"),
-        *                 @OA\Property(
-        *                     property="client",
-        *                     @OA\Property(property="id", type="string", example="d4f29175-dfad-37aa-9e96-37f47dd4f2a2"),
-        *                     @OA\Property(property="cni", type="string", example="ML787246"),
-        *                     @OA\Property(
-        *                         property="user",
-        *                         @OA\Property(property="nom", type="string", example="Orin"),
-        *                         @OA\Property(property="prenom", type="string", example="Haley"),
-        *                         @OA\Property(property="telephone", type="string", example="539.756.2409"),
-        *                         @OA\Property(property="email", type="string", example="hilario.sanford@example.net")
-        *                     )
-        *                 ),
-        *                 @OA\Property(property="statut", type="string", example="actif")
-        *             )
-        *         )
-        *     ),
-        *     @OA\Response(
-        *         response=404,
-        *         description="Aucun compte trouvé",
-        *         @OA\JsonContent(
-        *             @OA\Property(property="success", type="boolean", example=false),
-        *             @OA\Property(property="message", type="string", example="Le numéro de compte est requis"),
-        *             @OA\Property(property="errors", type="object", nullable=true)
-        *         )
-        *     )
-        * )
-         */
+
+   /**
+    * @OA\Get(
+    *     path="/ndiaye/api/v1/comptes/telephone/{telephone}",
+    *     summary="Rechercher un compte par téléphone",
+    *     description="Récupère les détails d'un compte bancaire par le numéro de téléphone du client",
+    *     operationId="getCompteByTelephone",
+    *     tags={"Comptes"},
+    *     @OA\Parameter(
+    *         name="telephone",
+    *         in="path",
+    *         description="Numéro de téléphone du client",
+    *         required=true,
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Compte trouvé avec succès",
+    *         
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Aucun compte trouvé",
+    *         @OA\JsonContent(
+    *            
+    *         )
+    *     )
+    * )
+    */
       public function showBytelephone($telephone){
 
            $compte= $this->compteService->getCompteByTelephone($telephone);
@@ -247,83 +156,50 @@ class CompteController extends Controller
            return $this->successResponse('trouve avec succces',$compte,200);
      }
 
-/**
- * @OA\Post(
- *     path="/ndiaye/api/v1/comptes",
- *     summary="Créer un nouveau compte",
- *     description="Crée un nouveau compte bancaire avec les informations du client",
- *     operationId="createCompte",
- *     tags={"Comptes"},
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(
- *             required={"type", "solde", "devise", "client"},
- *             @OA\Property(property="type", type="string", enum={"epargne", "courant", "cheque"}),
- *             @OA\Property(property="solde", type="number"),
- *             @OA\Property(property="devise", type="string", enum={"XOF", "EUR", "USD"}),
- *             @OA\Property(
- *                 property="client",
- *                 type="object",
- *                 required={"titulaire", "email", "telephone", "adresse"},
- *                 @OA\Property(property="titulaire", type="string"),
- *                 @OA\Property(property="email", type="string", format="email"),
- *                 @OA\Property(property="telephone", type="string"),
- *                 @OA\Property(property="adresse", type="string")
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Compte créé avec succès",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean"),
- *             @OA\Property(property="message", type="string"),
- *             @OA\Property(
- *                 property="data",
- *                 type="object",
- *                 @OA\Property(property="id", type="string"),
- *                 @OA\Property(property="numeroCompte", type="string"),
- *                 @OA\Property(property="titulaire", type="string"),
- *                 @OA\Property(property="type", type="string"),
- *                 @OA\Property(property="solde", type="number"),
- *                 @OA\Property(property="devise", type="string"),
- *                 @OA\Property(property="dateCreation", type="string", format="date-time"),
- *                 @OA\Property(property="statut", type="string"),
- *                 @OA\Property(
- *                     property="metadata",
- *                     type="object",
- *                     @OA\Property(property="derniereModification", type="string", format="date-time"),
- *                     @OA\Property(property="version", type="integer")
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=422,
- *         description="Données invalides",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean"),
- *             @OA\Property(property="message", type="string"),
- *             @OA\Property(
- *                 property="errors",
- *                 type="object"
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Erreur serveur",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean"),
- *             @OA\Property(property="message", type="string"),
- *             @OA\Property(
- *                 property="errors",
- *                 type="object"
- *             )
- *         )
- *     )
- * )
- */
+   /**
+    * @OA\Post(
+    *     path="/ndiaye/api/v1/comptes",
+    *     summary="Créer un nouveau compte",
+    *     description="Crée un nouveau compte bancaire avec les informations du client",
+    *     operationId="createCompte",
+    *     tags={"Comptes"},
+    *     @OA\RequestBody(
+    *         required=true,
+    *         @OA\JsonContent(
+    *             
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Compte créé avec succès",
+    *         @OA\JsonContent(
+    *             
+    *                 )
+    *             
+    *         
+    *     ),
+    *     @OA\Response(
+    *         response=422,
+    *         description="Données invalides",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="success", type="boolean", example=false),
+    *             @OA\Property(property="message", type="string", example="Les données fournies sont invalides"),
+    *             @OA\Property(property="error", type="object",
+    *                 @OA\Property(property="code", type="string", example="VALIDATION_ERROR"),
+    *                 @OA\Property(property="details", type="object")
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=500,
+    *         description="Erreur serveur",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="success", type="boolean", example=false),
+    *             @OA\Property(property="message", type="string", example="SERVER_ERROR")
+    *         )
+    *     )
+    * )
+    */
 public function store(CreateCompteRequest $request)
 {
     try {
@@ -331,6 +207,7 @@ public function store(CreateCompteRequest $request)
            return $this->successResponse('Compte créé avec succès',$compte,200);
 
         
+
 
     } catch (\Illuminate\Validation\ValidationException $e) {
  /// je doit  modofier les formatde response dans le trait apiresponse a faire aavant de push
