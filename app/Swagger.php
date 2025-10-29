@@ -9,8 +9,8 @@ namespace App;
  *     description="API pour la gestion des comptes bancaires"
  * )
  * @OA\Server(
- *     url="http://localhost:8000/",
- *     description="Serveur de développement"
+ *     url="https://gestion-compte-amycolle.onrender.com/",
+ *     description="Serveur de production"
  * )
  */
 class Swagger
