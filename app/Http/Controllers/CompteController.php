@@ -51,15 +51,22 @@ class CompteController extends Controller
     *         required=false,
     *         @OA\Schema(type="integer", default=1, minimum=1)
     *     ),
+    *     @OA\Parameter(
+    *         name="type",
+    *         in="query",
+    *         description="Type de compte (courant, epargne, cheque)",
+    *         required=false,
+    *         @OA\Schema(type="string", enum={"courant", "epargne", "cheque"})
+    *     ),
     *     @OA\Response(
     *         response=200,
     *         description="Liste des comptes récupérée avec succès",
     *         @OA\JsonContent(
-    *             
-    *                 
+    *
+    *
     *                     )
     *                 ),
-    *                 
+    *
     *             )
     *         )
     *     ),
@@ -67,7 +74,7 @@ class CompteController extends Controller
     *         response=500,
     *         description="Erreur serveur",
     *         @OA\JsonContent(
-    *            
+    *
     *         )
     *     )
     * )
@@ -75,7 +82,8 @@ class CompteController extends Controller
       public function index (Request $request){
        $limit=$request->input('limit',5);
        $page=$request->input('page',1);
-       $comptes=$this->compteService->listesComptes($limit,$page);
+       $type=$request->input('type');
+       $comptes=$this->compteService->listesComptes($limit,$page,$type);
           return  $this->paginatedResponse($comptes,"liste les comptes demandes");
 
        }

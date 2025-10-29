@@ -34,6 +34,7 @@ class CreateCompteRequest extends FormRequest
 
             // client.* fields (dot notation required by Laravel)
             'client.titulaire' => ['required', 'string'],
+            'client.prenom' => ['required', 'string'],
             'client.email' => ['required', 'email', 'unique:users,email', new Email()],
             'client.adresse' => ['required', 'string'],
             'client.telephone' => ['required', 'string', new Telephone()],

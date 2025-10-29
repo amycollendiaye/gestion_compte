@@ -18,13 +18,13 @@ class CompteResource extends JsonResource
                 'id' => $this->client->id,
                 'cni' => $this->client->cni,
                 // Vérifie que le user existe (relation client → user)
-                'user' => $this->client->user ? [
+                
                     'nom' => $this->client->user->nom,
                     'prenom' => $this->client->user->prenom,
                     'telephone' => $this->client->user->telephone,
                     'email' => $this->client->user->email,
                     'role'=>$this->client->user->role,
-                ] : null
+                
             ] : null,
             'statut' => $this->statut,
         //          'links' => [

@@ -2,13 +2,13 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Gestion Compte API",
-        "description": "API pour la gestion des comptes bancaires  de wane",
+        "description": "API pour la gestion des comptes bancaires",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "https://gestion-compte-amycolle.onrender.com/",
-            "description": "Serveur de production"
+            "url": "http://localhost:8000/",
+            "description": "Serveur de développement"
         }
     ],
     "paths": {
@@ -42,6 +42,20 @@
                             "type": "integer",
                             "default": 1,
                             "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Type de compte (courant, epargne, cheque)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "courant",
+                                "epargne",
+                                "cheque"
+                            ]
                         }
                     }
                 ],

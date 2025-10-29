@@ -13,13 +13,14 @@ class Compte extends Model
     public $incrementing = false;
     protected $keyType = 'string';
      protected $fillable=[
-        
+            'id',
         'numero_compte',
         'type_compte',
         'statut',
         'archive',
         'client_id',
-        "solde"
+        'solde',
+        'devise'
      ];
          const CREATED_AT = 'dateCreation';
     const UPDATED_AT = 'derniereModification';
@@ -31,13 +32,16 @@ class Compte extends Model
      }
 
     // Mutator for numero_compte
-     public function setNumeroCompteAttribute($value)
+    public function setNumeroCompteAttribute($value)
     {
-        // Si vide, génère un numéro aléatoire
-        if (empty($value)) {
-            $this->attributes['numero_compte'] = 'ORANGEBANK-' . mt_rand(1000000000, 9999999999);
+        if (empty($value) || $value === '') {
+            // Génération d'un numéro unique
+            do {
+                $numero = 'ORANGEBANK-' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+            } while (static::where('numero_compte', $numero)->exists());
+            
+            $this->attributes['numero_compte'] = $numero;
         } else {
-            // Supprime les espaces et ajoute le préfixe SN
             $this->attributes['numero_compte'] = 'ORANGEBANK-' . str_replace(' ', '', $value);
         }
     }

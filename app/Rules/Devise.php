@@ -19,8 +19,8 @@ class Devise implements ValidationRule
       }
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!in_array(strtolower($value), $this->types)) {
-            $fail("Le $attribute doit être l’un des types suivants : " . implode(', ', $this->types) . ".");
+        if (!in_array(strtoupper($value), array_map('strtoupper', $this->types))) {
+            $fail("Le $attribute doit être l'un des types suivants : " . implode(', ', $this->types) . ".");
         }
     }
 }

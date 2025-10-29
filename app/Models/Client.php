@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Client extends Model
 {
@@ -13,19 +14,24 @@ class Client extends Model
     protected $keyType = 'string';
     
      protected $fillable = [
+        'id',
         'user_id',
         'cni'
-
-
     ];
-       protected static function booted()
+
+    protected static function booted()
     {
         static::creating(function ($client) {
+            if (!$client->id) {
+                $client->id = (string) Str::uuid();
+            }
             if ($client->user) {
                 $client->user->role = 'client';
                 $client->user->save();
             }
         });
+    
+    
     }
      public function comptes()
     {

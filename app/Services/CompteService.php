@@ -4,16 +4,15 @@ namespace App\Services;
 use App\Exceptions\CompteNotFoundException;
 use App\Http\Resources\CompteCollection;
 use App\Http\Resources\CompteResource;
-use App\Models;
+use App\Models\Client;
 use App\Models\Compte;
-use Illuminate\Support\Str;           
-
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class CompteService{
-    public function  listesComptes($limit=10,$page=1){
+    public function  listesComptes($limit=10,$page=1 , $type=null){
             $query = Compte::query()
             // avec le scope   global que  jai cplus besion de mettre
         // ->where('archive', '!=', 'supprime')
@@ -21,7 +20,9 @@ class CompteService{
         ->whereIn('type_compte', ['epargne', 'cheque', 'courant'])
         ->orderBy('dateCreation', 'desc');
 
-
+            if ($type) {
+            $query->where('type_compte', $type);
+        }
             $comptes= $query->paginate($limit, ['*'], 'page', $page);
             return new  CompteCollection($comptes);
 
@@ -67,27 +68,42 @@ public function createCompte(array $data)
             if (!$client) {
                 $password = Str::random(8);
 
-                $client = User::create([
+                // Créer l'utilisateur
+                $user = User::create([
                     'nom' => $data['client']['titulaire'],
+                    'prenom' => $data['client']['prenom'],
                     'email' => $data['client']['email'],
                     'telephone' => $data['client']['telephone'],
                     'adresse' => $data['client']['adresse'],
                     'password' => Hash::make($password),
                     'role' => 'client',
                 ]);
+
+                // Créer le client associé à l'utilisateur
+                $client = Client::create([
+                    'id' => (string) Str::uuid(),
+                    'user_id' => $user->id,
+                    'cni' => 'CNI' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT)
+                ]);
+            } else {
+                // Si l'utilisateur existe, récupérer le client associé
+                $client = Client::where('user_id', $client->id)->firstOrFail();
             }
 
             // Générer un numéro de compte unique
             
 
             // Créer le compte avec statut actif par défaut
-            $compte = Compte::create([
-                'type' => $data['type'],
-                'solde' => $data['solde'],
-                'devise' => $data['devise'],
-                'statut' => 'actif',
-                'client_id' => $client->id,
-            ]);
+            $compte = new Compte();
+            $compte->id = (string) Str::uuid();
+            $compte->numero_compte = ''; // Le mutator générera automatiquement le numéro
+            $compte->type_compte = $data['type'];
+            $compte->solde = $data['solde'];
+            $compte->devise = $data['devise'];
+            $compte->statut = 'actif';
+            $compte->client_id = $client->id;
+            $compte->archive = 'non_supprime';
+            $compte->save();
 
             // Préparer la réponse formatée
             return [
