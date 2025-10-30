@@ -19,6 +19,8 @@ use function Ramsey\Uuid\v1;
  *     name="Comptes",
  *     description="Gestion des comptes bancaires wane"
  * )
+ * 
+ * 
  */
 class CompteController extends Controller
 {
@@ -38,6 +40,7 @@ class CompteController extends Controller
     *     description="Récupère une liste paginée des comptes bancaires",
     *     operationId="listComptes",
     *     tags={"Comptes"},
+    *     security={{"bearerAuth":{}}},
     *     @OA\Parameter(
     *         name="limit",
     *         in="query",
@@ -110,24 +113,25 @@ class CompteController extends Controller
     *     description="Récupère les détails d'un compte bancaire spécifique par son numéro",
     *     operationId="getCompteByNumero",
     *     tags={"Comptes"},
+    *     security={{"bearerAuth":{}}},
     *     @OA\Parameter(
     *         name="numero",
     *         in="path",
     *         description="Numéro du compte bancaire",
     *         required=true,
-    *         
+    *
     *     ),
     *     @OA\Response(
     *         response=200,
     *         description="Compte trouvé avec succès",
     *         @OA\JsonContent(
-    *             
-    *             
-    *                 
-    *            
+    *
+    *
+    *
+    *
     *         )
     *     ),
-    *    
+    *
     *     )
     * )
     */
@@ -149,6 +153,7 @@ class CompteController extends Controller
     *     description="Récupère les détails d'un compte bancaire par le numéro de téléphone du client",
     *     operationId="getCompteByTelephone",
     *     tags={"Comptes"},
+    *     security={{"bearerAuth":{}}},
     *     @OA\Parameter(
     *         name="telephone",
     *         in="path",
@@ -158,7 +163,7 @@ class CompteController extends Controller
     *     @OA\Response(
     *         response=200,
     *         description="Compte trouvé avec succès",
-    *         
+    *
     *             )
     *         )
     *     ),
@@ -166,7 +171,7 @@ class CompteController extends Controller
     *         response=404,
     *         description="Aucun compte trouvé",
     *         @OA\JsonContent(
-    *            
+    *
     *         )
     *     )
     * )
@@ -185,20 +190,21 @@ class CompteController extends Controller
     *     description="Crée un nouveau compte bancaire avec les informations du client",
     *     operationId="createCompte",
     *     tags={"Comptes"},
+    *     security={{"bearerAuth":{}}},
     *     @OA\RequestBody(
     *         required=true,
     *         @OA\JsonContent(
-    *             
+    *
     *         )
     *     ),
     *     @OA\Response(
     *         response=200,
     *         description="Compte créé avec succès",
     *         @OA\JsonContent(
-    *             
+    *
     *                 )
-    *             
-    *         
+    *
+    *
     *     ),
     *     @OA\Response(
     *         response=422,
