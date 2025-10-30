@@ -9,6 +9,10 @@ namespace App;
  *     description="API pour la gestion des comptes bancaires"
  * )
  * @OA\Server(
+ *     url="http://127.0.0.1:8000",
+ *     description="Serveur local"
+ * )
+ * @OA\Server(
  *     url="https://gestion-compte-amycolle.onrender.com",
  *     description="Serveur de production"
  * )
