@@ -8,6 +8,7 @@ use App\Services\CompteService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 use function Ramsey\Uuid\v1;
 
@@ -83,11 +84,24 @@ class CompteController extends Controller
        $limit=$request->input('limit',5);
        $page=$request->input('page',1);
        $type=$request->input('type');
-       $comptes=$this->compteService->listesComptes($limit,$page,$type);
-          return  $this->paginatedResponse($comptes,"liste les comptes demandes");
+            $user = Auth::user();
+       if($user->isAdmin()){
 
+            $comptes=$this->compteService->listesComptes($limit,$page,$type);
+           return  $this->paginatedResponse($comptes,"liste les comptes demandes");
        }
+       elseif ($user->isClient())
+       {
+           $id=$request->input('id');
+           $comptes=$this->compteService->getCommptesById($id);
 
+           return  $this->paginatedResponse($comptes,"liste les comptes demandes");
+  }
+   else {
+           return $this->errorResponse('Accès refusé',403);
+   }
+
+     }
 
    /**
     * @OA\Get(

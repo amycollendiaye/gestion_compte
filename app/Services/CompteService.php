@@ -40,16 +40,15 @@ class CompteService{
     public function getCompteBytelephone(string $telephone)
     {
         // Normaliser le numéro de téléphone en supprimant les caractères spéciaux
-        $normalizedPhone = preg_replace('/[^0-9]/', '', $telephone);
         
         // Recherche les comptes liés à l'utilisateur avec ce numéro de téléphone
         $comptes = Compte::join('users', 'comptes.client_id', '=', 'users.id')
-            ->where('users.telephone', $normalizedPhone)
+            ->where('users.telephone', $telephone)
             ->select('comptes.*')
             ->get();
 
         if ($comptes->isEmpty()) {
-            throw new CompteNotFoundException("Aucun compte trouvé pour le numéro de téléphone $telephone");
+            throw new CompteNotFoundException("Aucun compte trouvé pour le nufméro de téléphone $telephone");
         }
 
         return new CompteCollection($comptes);
@@ -122,5 +121,12 @@ public function createCompte(array $data)
             ];
         });
     }
-    
-}
+      public function getCommptesById(string $id){
+                $comptes=Compte::where('client_id',$id)->get();
+                 if (!$comptes) {
+              throw new CompteNotFoundException("Le compte $id n'existe pas.");
+          }
+          return  new CompteCollection($comptes);
+      }
+    }
+         

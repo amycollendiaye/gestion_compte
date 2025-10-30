@@ -2,17 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\Client;
+use App\Models\Admin;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ClientSeeder extends Seeder
+class AdminSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Client::factory(10)->create();
+                Admin::factory(10)->create();
+
     }
 }

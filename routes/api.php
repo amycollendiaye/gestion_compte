@@ -23,13 +23,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Routes pour les comptes
 Route::post('/auth', [AuthController::class, 'login']);
-Route::post('comptes',[CompteController::class,"store"])->middleware('log.operation:create_compte');
-;
-Route::apiResource('comptes', CompteController::class)->except('show');
-Route::get('comptes/{numero}', [CompteController::class, 'showByNumero']);
-Route::get('comptes/telephone/{telephone}',[CompteController::class,"showBytelephone"]);
-Route::put('clients/{id}', [ClientController::class, 'update'])->middleware('log.operation:update_client');
+Route::middleware('auth:api')->post('/auth/refresh', [AuthController::class, 'refresh']);
+Route::middleware('auth:api')->post('/auth/logout', [AuthController::class, 'logout']);
 
 
+Route::middleware('auth:api')->group(function () {
+    Route::post('/comptes', [CompteController::class, 'store']);
+    // Route::delete('/comptes/{compte}', [CompteController::class, 'destroy']);
+    Route::get('/comptes', [CompteController::class, 'index']);
+    Route::get('/comptes/{compte}', [CompteController::class, 'showBynumero']);
+    Route::get('/comptes/telephone/{telephone}', [CompteController::class, 'showBytelephone']);
+});
+
+// Routes pour les clients (si nécessaire pour différencier les accès)
+// Route::middleware(['auth:api'])->group(function () {
+//     Route::get('/client/comptes', [CompteController::class, 'index']);
+// });

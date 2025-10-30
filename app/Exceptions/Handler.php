@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Exceptions;
-    use App\Exceptions\CompteNotFoundException;
+use App\Exceptions\CompteNotFoundException;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
@@ -29,8 +30,24 @@ class Handler extends ExceptionHandler
         });
     }
 
+
 public function render($request, Throwable $exception)
 {
+    if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Accès non autorisé!!! coach!. Token manquant ou invalide.',
+        ], 401);
+    }
+
+    if ($exception instanceof JWTException) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Token invalide ou expiré. Veuillez vous reconnecter.',
+        ], 401);
+    }
+
+    // Garder le code existant pour CompteNotFoundException
     if ($exception instanceof CompteNotFoundException) {
         return response()->json([
             'success' => false,
@@ -40,5 +57,6 @@ public function render($request, Throwable $exception)
 
     return parent::render($request, $exception);
 }
+
 
 }

@@ -1,8 +1,10 @@
- commment  utiliser  swagger :  
+##
+lsof -ti:8000 | xargs kill -9
+ommment  utiliser  swagger :  
  laravel na pas la dependance  native de swager  cest une dependance a telecharger ; la commmande  composer require "darkaonline/l5-swagger"
   ensuite 
   php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"(le fichier de config : config/l5-swagger.php
-
+##
 le dossier de docs : storage/api-docs
 
 un exemple YAML dans app/Http/swagger (selon la version))
@@ -19,3 +21,70 @@ pour  la realisation du endpoint en utilisation les  trait un service un resourc
         et  push de imahe sur docker hub :sudo docker push  amycolle/amycollendiaye-gest-comptes
 
  pour faire la mise a  jouse  de version php en laravel il faut composer update
+
+
+ ____________
+___Comment utiliser auth et passport
+  il faut dabord installler la dependance:composer require laravel/passport
+  puis faire la migrtaion:php artisan migrate
+php artisan passport:install
+  configuration de  auth.php dans le dossier  config  si cest un api je  les parametres de confih
+
+   la gestion des permission et authentifications 
+   use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Middlewares\RoleMiddleware;
+use Spatie\Permission\Middlewares\PermissionMiddleware;
+use Spatie\Permission\Middlewares\RoleOrPermissionMiddleware;
+
+protected $middlewareAliases = [
+    'role' => RoleMiddleware::class,
+    'permission' => PermissionMiddleware::class,
+    'role_or_permission' => RoleOrPermissionMiddleware::class,
+];
+
+$admin = Role::create(['name' => 'admin']);
+$client = Role::create(['name' => 'client']);
+
+Permission::create(['name' => 'creer_comptes']);
+Permission::create(['name' => 'voir_comptes']);
+Permission::create(['name' => 'supprimer_comptes']);
+
+// Donner toutes les permissions à l’admin
+$admin->givePermissionTo(Permission::all());
+
+// Donner seulement la permission de voir au client
+$client->givePermissionTo('voir_comptes');
+
+$user = App\Models\User::find(b1d64533-0a9a-325e-bd4e-879c0b1d1156
+); 
+
+
+$admin->givePermissionTo(['voir_comptes', 'creer_comptes', 'supprimer_comptes']);
+$client->givePermissionTo(['voir_comptes']);
+$user->assignRole('admin');
+
+// ou
+$user->assignRole('client');
+
+use App\Models\Compte;
+
+public function index()
+{
+    $user = Auth::user();
+
+    if ($user->hasRole('admin') && $user->can('voir tous les comptes')) {
+        $comptes = Compte::where('statut', 'actif')->get();
+    } elseif ($user->hasRole('client') && $user->can('voir mes comptes')) {
+        $comptes = Compte::where('user_id', $user->id)
+                         ->where('statut', 'actif')
+                         ->get();
+    } else {
+        return response()->json(['message' => 'Accès refusé'], 403);
+    }
+
+    return response()->json($comptes);
+}
+
+/// lister les   admins crees sur bash  
+php artisan tinker --execute="App\Models\Admin::with('user')->get()->each(function(\$admin) { echo \$admin->matricule . ' - ' . \$admin->user->nom . ' ' . \$admin->user->prenom . ' (' . \$admin->user->email . ')' . PHP_EOL; })"
