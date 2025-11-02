@@ -178,9 +178,13 @@ class CompteController extends Controller
     * )
     */
       public function showBytelephone($telephone){
+           $user = Auth::user();
+           if (!$user->isAdmin()) {
+               return $this->errorResponse("Accès non autorisé. Seuls les admins peuvent rechercher par téléphone.", 403);
+           }
 
            $compte= $this->compteService->getCompteByTelephone($telephone);
-           if(!$compte) return $this->errorResponse("Le numéro de compte est requis",404);
+           if(!$compte) return $this->errorResponse("Le numéro de téléphone est requis",404);
            return $this->successResponse('trouve avec succces',$compte,200);
      }
 

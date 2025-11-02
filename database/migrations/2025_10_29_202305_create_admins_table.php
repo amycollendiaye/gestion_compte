@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        
         Schema::create('admins', function (Blueprint $table) {
                     $table->uuid('id')->primary();
                     $table->uuid('user_id');
