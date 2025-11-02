@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Scope;
 class NonSuppCompte implements Scope{
      public function apply(Builder $builder, Model $model)
     {
-        $builder->where('archive', '=', 'non_supprime');
+        $builder->where('statut', '=', 'actif');
     }
 }

@@ -33,6 +33,8 @@ Route::middleware('auth:api')->group(function () {
     // Route::delete('/comptes/{compte}', [CompteController::class, 'destroy']);
     Route::get('/comptes', [CompteController::class, 'index']);
     Route::get('/comptes/{compte}', [CompteController::class, 'showBynumero']);
+    Route::delete('/comptes/{compte}', [CompteController::class, 'destroy']);
+
     Route::get('/comptes/telephone/{telephone}', [CompteController::class, 'showBytelephone']);
 });
 

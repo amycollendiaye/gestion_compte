@@ -6,6 +6,7 @@ use App\Http\Resources\CompteCollection;
 use App\Http\Resources\CompteResource;
 use App\Models\Client;
 use App\Models\Compte;
+use App\Models\Scopes\NonSuppCompte;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,6 @@ class CompteService{
             $query = Compte::query()
             // avec le scope   global que  jai cplus besion de mettre
         // ->where('archive', '!=', 'supprime')
-        ->whereIn('statut', ['actif'])
         ->whereIn('type_compte', ['epargne', 'cheque', 'courant'])
         ->orderBy('dateCreation', 'desc');
 
@@ -40,15 +40,16 @@ class CompteService{
     public function getCompteBytelephone(string $telephone)
     {
         // Normaliser le numéro de téléphone en supprimant les caractères spéciaux
-        
-        // Recherche les comptes liés à l'utilisateur avec ce numéro de téléphone
-        $comptes = Compte::join('users', 'comptes.client_id', '=', 'users.id')
+
+        // Recherche les comptes liés à l'utilisateur avec ce numéro de téléphone via la table clients
+        $comptes = Compte::join('clients', 'comptes.client_id', '=', 'clients.id')
+            ->join('users', 'clients.user_id', '=', 'users.id')
             ->where('users.telephone', $telephone)
             ->select('comptes.*')
             ->get();
 
         if ($comptes->isEmpty()) {
-            throw new CompteNotFoundException("Aucun compte trouvé pour le nufméro de téléphone $telephone");
+            throw new CompteNotFoundException("Aucun compte trouvé pour le numéro de téléphone $telephone");
         }
 
         return new CompteCollection($comptes);
@@ -115,8 +116,8 @@ public function createCompte(array $data)
                 'dateCreation' => $compte->created_at->toIso8601String(),
                 'statut' => $compte->statut,
                 'metadata' => [
-                    'derniereModification' => $compte->updated_at->toIso8601String(),
-                    'version' => 1,
+                'derniereModification' => $compte->updated_at->toIso8601String(),
+                'version' => 1,
                 ],
             ];
         });
@@ -127,6 +128,15 @@ public function createCompte(array $data)
               throw new CompteNotFoundException("Le compte $id n'existe pas.");
           }
           return  new CompteCollection($comptes);
+      }
+
+      public  function delete(string $numero){
+        $compte= Compte::withoutGlobalScope(NonSuppCompte::class)->where('numero_compte', $numero)->first();
+ if (!$compte) {
+        throw new CompteNotFoundException("Le compte $numero n'existe pas.");
+    }
+           return $compte ;
+
       }
     }
          

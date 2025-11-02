@@ -14,17 +14,20 @@ return new class extends Migration
         Schema::create('comptes', function (Blueprint $table) {
             $table->uuid('id')->primary();
              $table->string('numero_compte')->unique();
-             $table->enum('type_compte',['epargne','cheque','courant'])->default('courant');
-             $table->enum('statut',['actif','inactif','bloque'])->default('actif'); 
+             $table->enum('type_compte',['epargne','cheque',]);
+             $table->enum('statut',['actif','ferme','bloque'])->default('actif'); 
              $table->uuid('client_id');
             $table->decimal('solde', 15, 2)->default(0);
-             $table->enum('devise',["XOF","EURO","DOLLARS"]);
+             $table->string('devise')->default('XOF');
              $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-             $table->enum("archive",['supprime','non_supprime']);
              $table->timestamp('dateCreation')->useCurrent();
             $table->timestamp('derniereModification')->useCurrent()->useCurrentOnUpdate();
              $table->string('motif_blocage')->nullable();
-            $table->index(['numero_compte',"client_id","statut","type_compte",'archive']);
+            $table->index(['numero_compte',"client_id","statut","type_compte"]);
+               $table->softDeletes();
+
+
+               
 
         });
     }

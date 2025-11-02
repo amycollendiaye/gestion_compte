@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Models\Scopes\NonSuppCompte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Compte extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     // Use UUID for primary key
     public $incrementing = false;
     protected $keyType = 'string';
@@ -17,7 +20,6 @@ class Compte extends Model
         'numero_compte',
         'type_compte',
         'statut',
-        'archive',
         'client_id',
         'solde',
         'devise'

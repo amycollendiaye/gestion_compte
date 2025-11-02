@@ -6,6 +6,7 @@ use App\Http\Requests\CreateCompteRequest;
 use App\Models\Compte;
 use App\Services\CompteService;
 use App\Traits\ApiResponse;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -251,5 +252,56 @@ public function store(CreateCompteRequest $request)
         
     
     }
+}
+   /**
+    * @OA\Delete(
+    *     path="/ndiaye/api/v1/comptes/{numero}",
+    *     summary="Supprimer un compte (soft delete)",
+    *     description="Marque un compte bancaire comme supprimé sans le supprimer définitivement",
+    *     operationId="deleteCompte",
+    *     tags={"Comptes"},
+    *     security={{"bearerAuth":{}}},
+    *     @OA\Parameter(
+    *         name="numero",
+    *         in="path",
+    *         description="Numéro du compte bancaire à supprimer",
+    *         required=true,
+    *         @OA\Schema(type="string")
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Compte supprimé avec succès",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="success", type="boolean", example=true),
+    *             @OA\Property(property="message", type="string", example="Compte supprimé (soft delete) avec succès"),
+    *             @OA\Property(property="data", type="object")
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Compte non trouvé",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="success", type="boolean", example=false),
+    *             @OA\Property(property="message", type="string", example="Aucun compte trouvé")
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=500,
+    *         description="Erreur serveur",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="success", type="boolean", example=false),
+    *             @OA\Property(property="message", type="string", example="SERVER_ERROR")
+    *         )
+    *     )
+    * )
+    */
+public function destroy(string $compte){
+
+     $compteObj= $this->compteService->delete($compte);
+           $compteObj->delete();
+
+
+     return   $this->successResponse("Compte supprimé (soft delete) avec succès", $compteObj, 200);
+
 }
 }

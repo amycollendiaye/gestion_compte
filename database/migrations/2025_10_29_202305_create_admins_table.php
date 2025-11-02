@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
                     $table->uuid('id')->primary();
+                    $table->uuid('user_id');
+
                     $table->foreign('user_id')
                     ->references('id')
                     ->on('users')
