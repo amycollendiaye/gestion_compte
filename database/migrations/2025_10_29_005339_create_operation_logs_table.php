@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+   public function up(): void
+    {
+        Schema::create('operation_logs', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('operation');
+            $table->string('ressource')->nullable();
+            $table->string('host')->nullable();
+            $table->string('user_agent')->nullable();
+            $table->timestamp('date_operation')->useCurrent();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('operation_logs');
+    }
+};

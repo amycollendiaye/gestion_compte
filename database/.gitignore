@@ -1,0 +1,2 @@
+*.sqlite*
+echo "storage/oauth-keys/*.key" >> .gitignore
